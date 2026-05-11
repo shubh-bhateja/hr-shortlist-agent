@@ -19,7 +19,7 @@ import json
 from typing import Optional
 
 import numpy as np
-from langchain_openai import ChatOpenAI
+from utils.llm_factory import get_chat_llm
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 
@@ -152,7 +152,7 @@ Score this candidate across all 5 dimensions. Return ONLY the JSON."""
 def score_candidate(
     jd: JobRequirements,
     profile: CandidateProfile,
-    model: str = "gpt-4o",
+    model: str | None = None,
     semantic_sim: Optional[float] = None,
 ) -> CandidateScorecard:
     """Score one candidate against a JD. Returns a validated CandidateScorecard."""
@@ -164,7 +164,7 @@ def score_candidate(
         f"  • {r['dimension']} (weight {int(r['weight']*100)}%)" for r in RUBRIC
     )
 
-    llm = ChatOpenAI(model=model, temperature=0.0, model_kwargs={"response_format": {"type": "json_object"}})
+    llm = get_chat_llm(model=model, temperature=0.0, json_mode=True)
     prompt = ChatPromptTemplate.from_messages([
         ("system", _SYSTEM),
         ("human", _HUMAN),
@@ -238,7 +238,7 @@ def score_all_candidates(state: dict) -> dict:
     """
     jd: JobRequirements = state["job_requirements"]
     profiles: list[CandidateProfile] = state.get("candidate_profiles", [])
-    model: str = state.get("model", "gpt-4o")
+    model: str | None = state.get("model")
 
     scorecards = []
     errors = []

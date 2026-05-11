@@ -108,24 +108,49 @@ if "overrides" not in st.session_state or st.session_state.overrides is None:
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## 🎯 HR Shortlisting Agent")
-    st.markdown("<p style='color:#64748b;font-size:12px;'>Powered by LangGraph · GPT-4o · SentenceTransformers</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#64748b;font-size:12px;'>Powered by LangGraph · SentenceTransformers</p>", unsafe_allow_html=True)
     st.markdown("---")
 
-    api_key = st.text_input(
-        "OpenAI API Key",
-        type="password",
-        value=os.getenv("OPENAI_API_KEY", ""),
-        help="Your key is never stored or logged.",
-    )
-    if api_key:
-        os.environ["OPENAI_API_KEY"] = api_key
-
-    model_choice = st.selectbox(
-        "LLM Model",
-        ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo"],
+    provider = st.selectbox(
+        "LLM Provider",
+        ["Gemini (FREE)", "OpenAI (Paid)"],
         index=0,
-        help="gpt-4o gives best quality. gpt-4o-mini is faster & cheaper.",
+        help="Gemini is FREE (15 RPM, 1M tokens/day). OpenAI requires a paid API key.",
     )
+
+    if provider.startswith("Gemini"):
+        os.environ["LLM_PROVIDER"] = "gemini"
+        api_key = st.text_input(
+            "Google API Key (free)",
+            type="password",
+            value=os.getenv("GOOGLE_API_KEY", ""),
+            help="Get your FREE key at https://aistudio.google.com/apikey",
+        )
+        if api_key:
+            os.environ["GOOGLE_API_KEY"] = api_key
+        model_choice = st.selectbox(
+            "Gemini Model",
+            ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"],
+            index=0,
+            help="gemini-2.5-flash is free and fast. gemini-1.5-pro is more capable.",
+        )
+        os.environ["GEMINI_MODEL"] = model_choice
+    else:
+        os.environ["LLM_PROVIDER"] = "openai"
+        api_key = st.text_input(
+            "OpenAI API Key",
+            type="password",
+            value=os.getenv("OPENAI_API_KEY", ""),
+            help="Your key is never stored or logged.",
+        )
+        if api_key:
+            os.environ["OPENAI_API_KEY"] = api_key
+        model_choice = st.selectbox(
+            "OpenAI Model",
+            ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo"],
+            index=0,
+            help="gpt-4o gives best quality. gpt-4o-mini is faster & cheaper.",
+        )
 
     st.markdown("---")
     st.markdown("### 📋 Job Description")

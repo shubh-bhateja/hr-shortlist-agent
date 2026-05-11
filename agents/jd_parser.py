@@ -9,7 +9,6 @@ Uses JSON-mode / structured output to guarantee schema compliance.
 
 from __future__ import annotations
 import logging
-from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 from schemas import JobRequirements
@@ -40,9 +39,10 @@ JD TEXT:
 Return ONLY the JSON. No explanation."""
 
 
-def build_jd_parser_chain(model: str = "gpt-4o", temperature: float = 0.0):
+def build_jd_parser_chain(model: str | None = None, temperature: float = 0.0):
     """Build and return the JD parser chain."""
-    llm = ChatOpenAI(model=model, temperature=temperature)
+    from utils.llm_factory import get_chat_llm
+    llm = get_chat_llm(model=model, temperature=temperature)
     parser = PydanticOutputParser(pydantic_object=JobRequirements)
     prompt = ChatPromptTemplate.from_messages([
         ("system", _SYSTEM),
@@ -58,7 +58,7 @@ def parse_jd(state: dict) -> dict:
     Output state keys: job_requirements, jd_parse_error (on failure)
     """
     jd_text: str = state.get("jd_text", "")
-    model: str = state.get("model", "gpt-4o")
+    model: str | None = state.get("model")
 
     if not jd_text.strip():
         logger.error("JD text is empty.")

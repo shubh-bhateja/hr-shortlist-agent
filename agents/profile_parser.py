@@ -25,7 +25,7 @@ from typing import Union
 
 import fitz  # PyMuPDF
 from docx import Document as DocxDocument
-from langchain_openai import ChatOpenAI
+from utils.llm_factory import get_chat_llm
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
@@ -116,8 +116,8 @@ def _mask_pii(text: str) -> tuple[str, str, str]:
 
 # ── LLM chain ─────────────────────────────────────────────────────────────────
 
-def _build_profile_chain(model: str = "gpt-4o"):
-    llm = ChatOpenAI(model=model, temperature=0.0)
+def _build_profile_chain(model: str | None = None):
+    llm = get_chat_llm(model=model, temperature=0.0)
     parser = PydanticOutputParser(pydantic_object=CandidateProfile)
     prompt = ChatPromptTemplate.from_messages([
         ("system", _SYSTEM),
@@ -128,7 +128,7 @@ def _build_profile_chain(model: str = "gpt-4o"):
 
 def parse_single_resume(
     file_path: Union[str, Path],
-    model: str = "gpt-4o",
+    model: str | None = None,
     candidate_id: str | None = None,
 ) -> CandidateProfile:
     """Parse one resume file → CandidateProfile."""
@@ -164,7 +164,7 @@ def parse_all_profiles(state: dict) -> dict:
     Output state keys: candidate_profiles (list[CandidateProfile]), profile_errors
     """
     file_paths: list[str] = state.get("file_paths", [])
-    model: str = state.get("model", "gpt-4o")
+    model: str | None = state.get("model")
 
     profiles = []
     errors = []

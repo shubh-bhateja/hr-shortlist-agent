@@ -158,7 +158,11 @@ pip install -r requirements.txt
 ### 4. Set up environment variables
 ```bash
 cp .env.example .env
-# Edit .env and add your OpenAI API key
+# The default uses Google Gemini (FREE — no payment required)
+# Get your free key at: https://aistudio.google.com/apikey
+# Set GOOGLE_API_KEY in .env
+#
+# Alternatively, set LLM_PROVIDER=openai and add OPENAI_API_KEY (paid)
 # Optionally add LangSmith key for observability
 ```
 
