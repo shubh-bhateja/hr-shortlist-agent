@@ -1,0 +1,60 @@
+{
+  "full_name": "Vikram Reddy",
+  "headline": "Senior ML Engineer | FinTech AI | Ex-Razorpay",
+  "location": "Bangalore, India",
+  "current_company": "Razorpay",
+  "current_title": "Senior Machine Learning Engineer",
+  "summary": "5+ years building production ML systems for fraud detection and credit scoring at scale. Led the deployment of real-time inference pipelines serving 10M+ transactions/day. Passionate about applying LLMs and RAG to financial document understanding.",
+  "experience": [
+    {
+      "title": "Senior Machine Learning Engineer",
+      "company": "Razorpay",
+      "duration": "2022 – Present (3 years)",
+      "description": "Built real-time fraud detection models using PyTorch, achieving 94% precision at 1% FPR. Deployed models via SageMaker endpoints with MLflow tracking. Implemented RAG pipeline for internal KYC document processing using LangChain."
+    },
+    {
+      "title": "ML Engineer",
+      "company": "Paytm",
+      "duration": "2020 – 2022 (2 years)",
+      "description": "Developed credit scoring models using XGBoost and deep learning. Built automated feature engineering pipelines with Kubernetes-orchestrated batch jobs. Contributed to open-source fraud detection toolkit (200+ GitHub stars)."
+    },
+    {
+      "title": "Data Scientist Intern",
+      "company": "ICICI Bank – Innovation Lab",
+      "duration": "2019 – 2020 (1 year)",
+      "description": "Worked on NLP-based contract analysis for loan documents. Built text classification models using BERT fine-tuning."
+    }
+  ],
+  "education": [
+    {
+      "degree": "M.Tech in Data Science",
+      "institution": "IIT Hyderabad",
+      "year": "2020"
+    },
+    {
+      "degree": "B.Tech in Computer Science",
+      "institution": "NIT Warangal",
+      "year": "2018"
+    }
+  ],
+  "skills": [
+    "Python", "PyTorch", "TensorFlow", "LangChain", "LlamaIndex",
+    "MLflow", "Docker", "Kubernetes", "AWS SageMaker", "PostgreSQL",
+    "MongoDB", "Scikit-learn", "XGBoost", "BERT", "RAG",
+    "CI/CD", "FastAPI", "Redis", "Apache Kafka"
+  ],
+  "certifications": [
+    "AWS Certified Machine Learning – Specialty",
+    "DeepLearning.AI – LLM Specialization"
+  ],
+  "publications": [
+    "Reddy, V. et al. (2023) 'Real-time Fraud Detection at Scale using Graph Neural Networks', AAAI Workshop on AI in FinTech."
+  ],
+  "projects": [
+    "Open-source fraud detection toolkit (github.com/vikram/fraud-detect, 200+ stars)",
+    "LangChain RAG pipeline for KYC document processing",
+    "Real-time credit scoring API (10M+ daily inferences)"
+  ],
+  "email": "vikram.reddy@example.com",
+  "phone": "+91-9876543210"
+}

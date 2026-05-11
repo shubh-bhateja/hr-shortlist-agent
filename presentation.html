@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Shortlisting Agent — Presentation</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root { --r-main-font: 'DM Sans', sans-serif; --r-heading-font: 'DM Sans', sans-serif; --r-code-font: 'DM Mono', monospace; }
+.reveal { font-family: 'DM Sans', sans-serif; }
+.reveal h1, .reveal h2, .reveal h3 { font-family: 'DM Sans', sans-serif; text-transform: none; }
+.reveal h1 { font-size: 2.2em; }
+.reveal h2 { font-size: 1.6em; color: #0D9488; }
+.reveal h3 { font-size: 1.2em; color: #94a3b8; }
+.reveal .slides section { text-align: left; }
+.reveal ul { font-size: 0.75em; line-height: 1.8; }
+.reveal li { margin-bottom: 6px; }
+.reveal table { font-size: 0.6em; margin: 0 auto; }
+.reveal th { background: #0D9488; color: white; padding: 8px 14px; }
+.reveal td { padding: 6px 14px; border-bottom: 1px solid #334155; }
+.teal { color: #0D9488; }
+.amber { color: #F59E0B; }
+.red { color: #EF4444; }
+.green { color: #22C55E; }
+.badge { display: inline-block; padding: 4px 16px; border-radius: 20px; font-size: 0.7em; font-weight: 600; }
+.badge-teal { background: rgba(13,148,136,0.2); color: #0D9488; border: 1px solid #0D9488; }
+.badge-amber { background: rgba(245,158,11,0.2); color: #F59E0B; border: 1px solid #F59E0B; }
+.flow-box { display: inline-block; background: rgba(13,148,136,0.15); border: 1px solid #0D9488; border-radius: 8px; padding: 8px 16px; margin: 4px; font-size: 0.65em; }
+.flow-arrow { display: inline-block; color: #0D9488; font-size: 1.2em; margin: 0 4px; vertical-align: middle; }
+.card { background: rgba(255,255,255,0.05); border: 1px solid #334155; border-radius: 10px; padding: 16px; margin: 8px 0; }
+.subtitle { color: #94a3b8; font-size: 0.55em; }
+.reveal pre { font-size: 0.5em; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.metric { text-align: center; }
+.metric .num { font-size: 2em; font-weight: 700; color: #0D9488; }
+.metric .lbl { font-size: 0.6em; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- SLIDE 1: Title -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 50%, #0A1628 100%)">
+<h1>🎯 HR Resume Shortlisting Agent</h1>
+<h3>AI-Powered Candidate Evaluation with Transparent Scoring</h3>
+<br>
+<p style="font-size:0.6em; color:#64748b;">
+AI Enablement Internship — Task 1 Submission<br>
+<span class="teal">Shubh Bhateja</span> · May 2026
+</p>
+<div style="margin-top:30px;">
+<span class="badge badge-teal">LangGraph</span>
+<span class="badge badge-teal">GPT-4o</span>
+<span class="badge badge-teal">SentenceTransformers</span>
+<span class="badge badge-teal">Streamlit</span>
+</div>
+</section>
+
+<!-- SLIDE 2: The Problem -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>📌 The Problem</h2>
+<div class="card">
+<p style="font-size:0.8em;">HR teams screen <span class="teal">hundreds of applications</span> per role, leading to:</p>
+<ul>
+<li><strong>Fatigue & Inconsistency</strong> — Reviewer #1 at 9 AM ≠ Reviewer #1 at 5 PM</li>
+<li><strong>Unconscious Bias</strong> — Name, university, and format influence decisions</li>
+<li><strong>No Transparency</strong> — "Why was this candidate rejected?" has no auditable answer</li>
+<li><strong>Time Drain</strong> — 6–8 minutes per resume × 200 applicants = <span class="red">25+ hours</span> per role</li>
+</ul>
+</div>
+<br>
+<p style="font-size:0.7em; color:#94a3b8;">
+<strong>Goal:</strong> Build an AI agent that standardises evaluation, surfaces best-fit candidates, 
+and keeps a <span class="teal">human in the loop</span> for final decisions.
+</p>
+</section>
+
+<!-- SLIDE 3: Solution Overview -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>💡 Solution Overview</h2>
+<p style="font-size:0.7em; color:#94a3b8;">What the agent does, end-to-end:</p>
+<div class="two-col">
+<div class="card">
+<h3 style="color:#0D9488;">Inputs</h3>
+<ul style="font-size:0.85em;">
+<li>📋 Job Description (free text)</li>
+<li>📁 Resumes (PDF / DOCX)</li>
+<li>🔗 LinkedIn profiles (JSON export)</li>
+</ul>
+</div>
+<div class="card">
+<h3 style="color:#0D9488;">Outputs</h3>
+<ul style="font-size:0.85em;">
+<li>📊 Ranked shortlist with scores</li>
+<li>📄 Professional PDF report</li>
+<li>✏️ HR override log (audit trail)</li>
+<li>📥 JSON export for ATS integration</li>
+</ul>
+</div>
+</div>
+<br>
+<div style="text-align:center;">
+<span class="flow-box">📋 JD Upload</span>
+<span class="flow-arrow">→</span>
+<span class="flow-box">🔍 Parse</span>
+<span class="flow-arrow">→</span>
+<span class="flow-box">📐 Score</span>
+<span class="flow-arrow">→</span>
+<span class="flow-box">📊 Rank</span>
+<span class="flow-arrow">→</span>
+<span class="flow-box">📄 Report</span>
+<span class="flow-arrow">→</span>
+<span class="flow-box">✏️ Override</span>
+</div>
+</section>
+
+<!-- SLIDE 4: Architecture -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>🏗️ Architecture — LangGraph Multi-Agent Pipeline</h2>
+<p style="font-size:0.6em; color:#94a3b8;">Each node is a pure function with Pydantic-validated I/O. State flows through the graph automatically.</p>
+<div style="text-align:center; margin: 20px 0;">
+<span class="flow-box" style="border-color:#22C55E;">START</span>
+<span class="flow-arrow">→</span>
+<span class="flow-box"><strong>Node 1</strong><br>JD Parser<br><span class="subtitle">LLM → JobRequirements</span></span>
+<span class="flow-arrow">→</span>
+<span class="flow-box"><strong>Node 2</strong><br>Profile Parser<br><span class="subtitle">PyMuPDF + LLM + PII Mask</span></span>
+<span class="flow-arrow">→</span>
+<span class="flow-box"><strong>Node 3</strong><br>Scorer<br><span class="subtitle">Embeddings + LLM Rubric</span></span>
+<span class="flow-arrow">→</span>
+<span class="flow-box"><strong>Node 4</strong><br>Report Gen<br><span class="subtitle">ReportLab PDF</span></span>
+<span class="flow-arrow">→</span>
+<span class="flow-box" style="border-color:#EF4444;">END</span>
+</div>
+<div class="card" style="font-size:0.65em;">
+<strong>Why LangGraph over a simple LangChain chain?</strong>
+<ul>
+<li>Explicit DAG with typed state — each node independently testable</li>
+<li>State inspectable at every step (debuggable)</li>
+<li>Extensible: add conditional edges (e.g., skip scoring if JD parse fails) without rewriting</li>
+<li>Native LangSmith integration — every node traced automatically</li>
+</ul>
+</div>
+</section>
+
+<!-- SLIDE 5: Tech Stack -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>🛠️ Tech Stack & Decision Log</h2>
+<table>
+<tr><th>Layer</th><th>Choice</th><th>Why This Over Alternatives</th></tr>
+<tr><td><strong>LLM</strong></td><td class="teal">GPT-4o</td><td>Best JSON-mode reliability, 128K context, native structured output. Over Claude (no JSON mode), Gemini (higher latency).</td></tr>
+<tr><td><strong>Agent Framework</strong></td><td class="teal">LangGraph 0.4</td><td>Explicit graph with typed state. Over CrewAI (less control), AutoGen (heavyweight).</td></tr>
+<tr><td><strong>Embeddings</strong></td><td class="teal">SentenceTransformers</td><td>Runs locally (no API cost), zero PII leakage. all-MiniLM-L6-v2 — fast + effective.</td></tr>
+<tr><td><strong>Resume Parse</strong></td><td class="teal">PyMuPDF + python-docx</td><td>Fastest pure-Python PDF extractor. LLM extraction handles unstructured formats.</td></tr>
+<tr><td><strong>Output</strong></td><td class="teal">ReportLab</td><td>Full programmatic PDF control (charts, tables, colours). Over fpdf2 (fewer primitives).</td></tr>
+<tr><td><strong>UI</strong></td><td class="teal">Streamlit</td><td>Fastest Python→Web. Zero JS needed. Over Gradio (less layout control).</td></tr>
+<tr><td><strong>Observability</strong></td><td class="teal">LangSmith</td><td>First-party tracing: every LLM call, latency, tokens. Zero code change.</td></tr>
+<tr><td><strong>Caching</strong></td><td class="teal">SQLite LLM Cache</td><td>Saves API costs during dev. Same resume = cached response, no re-call.</td></tr>
+</table>
+</section>
+
+<!-- SLIDE 6: Dual-Mode Scoring -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>📐 Dual-Mode Scoring Engine</h2>
+<p style="font-size:0.65em; color:#94a3b8;">The key differentiator — combining quantitative embeddings with qualitative LLM reasoning.</p>
+<div class="two-col">
+<div class="card">
+<h3 style="color:#0EA5E9;">Mode 1: Semantic Similarity</h3>
+<ul style="font-size:0.8em;">
+<li>SentenceTransformer encodes JD & candidate</li>
+<li>Cosine similarity → 0.0 to 1.0 score</li>
+<li>Quantitative, deterministic signal</li>
+<li>Runs locally — no API call needed</li>
+</ul>
+</div>
+<div class="card">
+<h3 style="color:#8B5CF6;">Mode 2: LLM Rubric Reasoning</h3>
+<ul style="font-size:0.8em;">
+<li>GPT-4o scores 5 dimensions (0-10)</li>
+<li>JSON mode + Pydantic validation</li>
+<li>Receives similarity as calibration anchor</li>
+<li>One-sentence justification per dimension</li>
+</ul>
+</div>
+</div>
+<br>
+<table>
+<tr><th>Dimension</th><th>Weight</th><th>0 – Poor</th><th>5 – Average</th><th>10 – Excellent</th></tr>
+<tr><td>Skills Match</td><td>30%</td><td>&lt;30% match</td><td>50-70% match</td><td>&gt;85% match</td></tr>
+<tr><td>Experience Relevance</td><td>25%</td><td>Unrelated</td><td>Adjacent domain</td><td>Exact domain + seniority</td></tr>
+<tr><td>Education & Certs</td><td>15%</td><td>Below minimum</td><td>Meets minimum</td><td>Exceeds + certs</td></tr>
+<tr><td>Project / Portfolio</td><td>20%</td><td>No evidence</td><td>1-2 generic</td><td>Strong relevant portfolio</td></tr>
+<tr><td>Communication</td><td>10%</td><td>Poor structure</td><td>Adequate</td><td>Crisp & impactful</td></tr>
+</table>
+</section>
+
+<!-- SLIDE 7: Security -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>🔒 Security by Design</h2>
+<p style="font-size:0.65em; color:#94a3b8;">Mandatory graded component — every risk mitigated with concrete implementation.</p>
+<table>
+<tr><th>Risk</th><th>Mitigation</th><th>Implementation</th></tr>
+<tr><td><span class="red">Prompt Injection</span></td><td>Structural blocking</td><td>JSON mode, Pydantic validation, data/instruction separation, 6000-char truncation</td></tr>
+<tr><td><span class="red">PII Leakage</span></td><td>Mask before LLM</td><td>Regex extracts email/phone → masked to [EMAIL]/[PHONE] → re-injected locally post-response</td></tr>
+<tr><td><span class="red">API Key Exposure</span></td><td>Never in code</td><td>.env + python-dotenv, .gitignore, password-type UI input, .env.example template</td></tr>
+<tr><td><span class="amber">Hallucination</span></td><td>Multi-layer guard</td><td>JSON mode + Pydantic ge=0/le=10 + dual-mode calibration + threshold anchoring</td></tr>
+<tr><td><span class="amber">Unauthorised Access</span></td><td>API key gate</td><td>App requires valid OpenAI key; prod: OAuth proxy recommendation</td></tr>
+<tr><td><span class="amber">Data at Rest</span></td><td>Ephemeral storage</td><td>tempfile.mkdtemp() for uploads; output/ gitignored; no database persistence</td></tr>
+</table>
+</section>
+
+<!-- SLIDE 8: Prompt Engineering -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>✍️ Prompt Engineering Journey</h2>
+<p style="font-size:0.65em; color:#94a3b8;">5 iterations from naive to production-grade — showing the thought process.</p>
+<div class="card" style="font-size:0.7em;">
+<table>
+<tr><th>Version</th><th>Change</th><th>Result</th></tr>
+<tr><td class="teal">v1</td><td>Single prompt for JD + scoring</td><td><span class="red">Inconsistent dimension coverage, schema drift</span></td></tr>
+<tr><td class="teal">v2</td><td>Separated JD parser from scorer</td><td><span class="amber">Better schema compliance, but inflated scores</span></td></tr>
+<tr><td class="teal">v3</td><td>Added cosine similarity as context</td><td><span class="amber">Scores better calibrated to semantic reality</span></td></tr>
+<tr><td class="teal">v4</td><td>Explicit threshold table for recommendations</td><td><span class="green">Consistent labelling (STRONG HIRE → NO HIRE)</span></td></tr>
+<tr><td class="teal">v5 (final)</td><td>One-sentence justification constraint + negative anchoring</td><td><span class="green">Production-ready, useful HR output</span></td></tr>
+</table>
+</div>
+<br>
+<div class="card" style="font-size:0.65em;">
+<strong>Key Prompt Strategies:</strong>
+<ul>
+<li><strong>Domain framing:</strong> "You are a senior HR analyst" — reduces hallucination</li>
+<li><strong>Negative constraint:</strong> "Reserve 9-10 for exceptional evidence, not assumptions"</li>
+<li><strong>Data isolation:</strong> Resume text in delimited blocks, not mixed with instructions</li>
+<li><strong>Anchor signal:</strong> Cosine similarity passed explicitly for calibration</li>
+</ul>
+</div>
+</section>
+
+<!-- SLIDE 9: Results -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>📊 Results & Demo</h2>
+<p style="font-size:0.65em; color:#94a3b8;">Tested with 6 candidates (2 strong, 2 partial, 2 no-match) + 1 LinkedIn JSON profile.</p>
+<div style="display: flex; gap: 20px; justify-content: center; margin: 20px 0;">
+<div class="metric"><div class="num">6</div><div class="lbl">Resumes Screened</div></div>
+<div class="metric"><div class="num">7</div><div class="lbl">Input Formats (PDF+JSON)</div></div>
+<div class="metric"><div class="num">5</div><div class="lbl">Scoring Dimensions</div></div>
+<div class="metric"><div class="num">4</div><div class="lbl">Agent Nodes</div></div>
+</div>
+<div class="card" style="font-size:0.7em;">
+<strong>Sample Ranking (Sr. ML Engineer — FinTech):</strong>
+<table>
+<tr><th>#</th><th>Candidate</th><th>Score /10</th><th>Sim</th><th>Verdict</th></tr>
+<tr><td>1</td><td>Arjun Sharma</td><td class="green">8.58</td><td>0.823</td><td><span style="color:#22C55E">STRONG HIRE</span></td></tr>
+<tr><td>2</td><td>Priya Nair</td><td class="teal">7.78</td><td>0.712</td><td><span style="color:#3B82F6">HIRE</span></td></tr>
+<tr><td>3</td><td>Ananya Das</td><td class="amber">6.13</td><td>0.534</td><td><span style="color:#F59E0B">CONSIDER</span></td></tr>
+<tr><td>4</td><td>Rahul Verma</td><td class="amber">5.25</td><td>0.398</td><td><span style="color:#F59E0B">CONSIDER</span></td></tr>
+<tr><td>5</td><td>Deepak Mehta</td><td class="red">3.25</td><td>0.187</td><td><span style="color:#EF4444">NO HIRE</span></td></tr>
+<tr><td>6</td><td>Sneha Kulkarni</td><td class="red">2.58</td><td>0.098</td><td><span style="color:#EF4444">NO HIRE</span></td></tr>
+</table>
+</div>
+<p style="font-size:0.55em; color:#64748b;">PDF report includes: cover page, executive summary, per-candidate scorecards with visual bars, skill gaps, HR override log, and methodology appendix.</p>
+</section>
+
+<!-- SLIDE 10: Learnings -->
+<section data-background-gradient="linear-gradient(135deg, #0A1628 0%, #0f2447 100%)">
+<h2>🎓 Key Learnings & Future Work</h2>
+<div class="two-col">
+<div class="card">
+<h3 style="color:#22C55E;">What I Learned</h3>
+<ul style="font-size:0.8em;">
+<li>Structured output (Pydantic + JSON mode) eliminates 90% of parsing headaches</li>
+<li>Dual-mode scoring prevents both LLM hallucination and pure-embedding blindness</li>
+<li>PII masking must happen <em>before</em> the API call — not after</li>
+<li>LangGraph's explicit state model makes debugging vastly easier than chains</li>
+<li>SQLite caching saves 70%+ API costs during iterative development</li>
+</ul>
+</div>
+<div class="card">
+<h3 style="color:#0EA5E9;">Future Improvements</h3>
+<ul style="font-size:0.8em;">
+<li>On-premise LLM (Ollama + LLaMA 3) for full PII containment</li>
+<li>Batch parallel processing for 100+ resumes</li>
+<li>ATS webhook integration (Greenhouse, Lever)</li>
+<li>Bias audit: statistical analysis across demographics</li>
+<li>Multi-language resume support</li>
+<li>Live LinkedIn scraping via RapidAPI</li>
+</ul>
+</div>
+</div>
+<br>
+<div style="text-align:center;">
+<p style="font-size:0.8em;">
+<span class="teal" style="font-size:1.3em;">Thank You</span><br>
+<span style="color:#94a3b8; font-size:0.7em;">
+GitHub: <a href="https://github.com/shubh-bhateja/hr-shortlist-agent" style="color:#0D9488;">shubh-bhateja/hr-shortlist-agent</a>
+</span>
+</p>
+</div>
+</section>
+
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script>
+Reveal.initialize({
+hash: true,
+slideNumber: 'c/t',
+transition: 'slide',
+backgroundTransition: 'fade',
+center: false,
+width: 1280,
+height: 720,
+margin: 0.08,
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+# Environment — NEVER commit secrets
+.env
+
+# Generated outputs (runtime)
+output/
+
+# But KEEP sample outputs and sample data PDFs in the repo
+!sample_output/
+!sample_data/*.pdf
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# LLM cache (dev only)
+.langchain_cache.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Uploaded files (temp)
+tmp_*/
+temp_*/

@@ -1,0 +1,21 @@
+Senior Machine Learning Engineer – FinTech AI Division
+
+We are hiring a Senior ML Engineer to build production-grade AI systems for our credit risk and fraud detection platforms.
+
+Requirements:
+- 4+ years of experience in applied Machine Learning / Deep Learning
+- Proficiency in Python, PyTorch or TensorFlow
+- Experience with LLM fine-tuning, RAG systems, or agentic AI frameworks (LangChain, LlamaIndex)
+- Strong knowledge of MLOps: MLflow, Docker, Kubernetes, CI/CD pipelines
+- Experience with SQL and NoSQL databases (PostgreSQL, MongoDB)
+- Exposure to cloud platforms: AWS (SageMaker) or GCP (Vertex AI)
+- Strong problem-solving and communication skills
+- B.Tech/M.Tech in Computer Science, Data Science, or related field
+
+Preferred:
+- Publications or open-source contributions in ML
+- AWS Certified ML Specialty or GCP Professional Data Engineer
+- Experience in FinTech domain (credit scoring, fraud detection, risk modelling)
+
+Seniority: Senior
+Domain: FinTech / AI
