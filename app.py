@@ -17,7 +17,17 @@ import plotly.graph_objects as go
 import pandas as pd
 from dotenv import load_dotenv
 
-load_dotenv()
+# Force load .env from the absolute path of this folder
+env_path = Path(__file__).parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+# Debug print to terminal (helps confirm key is loaded)
+g_key = os.getenv("GOOGLE_API_KEY", "")
+if g_key:
+    print(f"DEBUG: Loaded Google API Key starting with: {g_key[:4]}...")
+else:
+    print("DEBUG: NO GOOGLE API KEY FOUND IN ENV")
+
 logging.basicConfig(level=logging.INFO)
 
 # ── Page config ────────────────────────────────────────────────────────────────
@@ -54,12 +64,12 @@ section[data-testid="stSidebar"] label { color: #94a3b8 !important; font-size: 1
 
 /* Score card */
 .scorecard {
-    background: white;
-    border: 1px solid #e2e8f0;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 12px;
     padding: 20px 24px;
     margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     transition: box-shadow 0.2s;
 }
 .scorecard:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
@@ -87,7 +97,7 @@ section[data-testid="stSidebar"] label { color: #94a3b8 !important; font-size: 1
 
 /* Override section */
 .override-box {
-    background: #FFF7ED; border: 1px solid #FED7AA;
+    background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3);
     border-radius: 8px; padding: 14px 18px; margin-top: 10px;
 }
 
@@ -111,46 +121,22 @@ with st.sidebar:
     st.markdown("<p style='color:#64748b;font-size:12px;'>Powered by LangGraph · SentenceTransformers</p>", unsafe_allow_html=True)
     st.markdown("---")
 
-    provider = st.selectbox(
-        "LLM Provider",
-        ["Gemini (FREE)", "OpenAI (Paid)"],
-        index=0,
-        help="Gemini is FREE (15 RPM, 1M tokens/day). OpenAI requires a paid API key.",
+    st.markdown("### ⚙️ LLM Configuration")
+    os.environ["LLM_PROVIDER"] = "groq"
+    api_key = st.text_input(
+        "Groq API Key (free)",
+        type="password",
+        value=os.getenv("GROQ_API_KEY", "").strip(),
+        help="Get your FREE key at https://console.groq.com/keys",
     )
-
-    if provider.startswith("Gemini"):
-        os.environ["LLM_PROVIDER"] = "gemini"
-        api_key = st.text_input(
-            "Google API Key (free)",
-            type="password",
-            value=os.getenv("GOOGLE_API_KEY", ""),
-            help="Get your FREE key at https://aistudio.google.com/apikey",
-        )
-        if api_key:
-            os.environ["GOOGLE_API_KEY"] = api_key
-        model_choice = st.selectbox(
-            "Gemini Model",
-            ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"],
-            index=0,
-            help="gemini-2.5-flash is free and fast. gemini-1.5-pro is more capable.",
-        )
-        os.environ["GEMINI_MODEL"] = model_choice
-    else:
-        os.environ["LLM_PROVIDER"] = "openai"
-        api_key = st.text_input(
-            "OpenAI API Key",
-            type="password",
-            value=os.getenv("OPENAI_API_KEY", ""),
-            help="Your key is never stored or logged.",
-        )
-        if api_key:
-            os.environ["OPENAI_API_KEY"] = api_key
-        model_choice = st.selectbox(
-            "OpenAI Model",
-            ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo"],
-            index=0,
-            help="gpt-4o gives best quality. gpt-4o-mini is faster & cheaper.",
-        )
+    if api_key:
+        os.environ["GROQ_API_KEY"] = api_key.strip()
+    model_choice = st.selectbox(
+        "Groq Model",
+        ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768"],
+        index=0,
+    )
+    os.environ["GROQ_MODEL"] = model_choice
 
     st.markdown("---")
     st.markdown("### 📋 Job Description")
@@ -197,9 +183,12 @@ st.markdown(
 # ── Run pipeline ───────────────────────────────────────────────────────────────
 if run_btn:
     if not api_key:
-        st.error("⚠️ Please enter your OpenAI API key in the sidebar.")
-    elif not jd_text.strip():
-        st.error("⚠️ Please paste a Job Description in the sidebar.")
+        st.error("⚠️ Please enter your Groq API key in the sidebar.")
+        st.stop()
+
+    if not jd_text.strip():
+        st.error("⚠️ Please enter a Job Description.")
+        st.stop()
     elif not uploaded_files:
         st.error("⚠️ Please upload at least one resume.")
     else:
@@ -294,10 +283,12 @@ if st.session_state.results:
         </div>""", unsafe_allow_html=True)
     with col4:
         top = scorecards[0] if scorecards else None
+        top_score = f"{top.total_weighted_score:.2f}" if top else "0.00"
+        top_name = top.full_name.split()[0] if top else "—"
         st.markdown(f"""
         <div class='metric-tile'>
-            <div class='val'>{top.total_weighted_score:.2f}</div>
-            <div class='lbl'>Top Score — {top.full_name.split()[0] if top else '—'}</div>
+            <div class='val'>{top_score}</div>
+            <div class='lbl'>Top Score — {top_name}</div>
         </div>""", unsafe_allow_html=True)
 
     st.markdown("<br/>", unsafe_allow_html=True)
@@ -331,10 +322,14 @@ if st.session_state.results:
             }
             return colors_map.get(val, "")
 
-        styled = df.style.applymap(color_rec, subset=["Recommendation"])\
-                         .format({"Score /10": "{:.2f}", "Semantic Sim": "{:.3f}"})\
-                         .background_gradient(subset=["Score /10"], cmap="RdYlGn", vmin=0, vmax=10)
-        st.dataframe(styled, use_container_width=True, hide_index=True)
+        if not df.empty:
+            styled = df.style.map(color_rec, subset=["Recommendation"])\
+                             .format({"Score /10": "{:.2f}", "Semantic Sim": "{:.3f}"})\
+                             .background_gradient(subset=["Score /10"], cmap="RdYlGn", vmin=0, vmax=10)
+            st.dataframe(styled, use_container_width=True, hide_index=True)
+        else:
+            st.warning("No candidates were successfully scored. Please check the terminal logs.")
+
 
         # Score comparison bar chart
         st.markdown("#### Score Comparison")
@@ -405,7 +400,7 @@ if st.session_state.results:
                             <span style='font-weight:600;color:#0A1628;'>{d.dimension}</span>
                             <span style='color:#64748b;'>weight {int(d.weight*100)}% · <b style='color:{bar_color};'>{d.raw_score:.1f}/10</b></span>
                         </div>
-                        <div style='background:#e2e8f0;border-radius:4px;height:7px;'>
+                        <div style='background:rgba(255,255,255,0.1);border-radius:4px;height:7px;'>
                             <div style='width:{pct}%;background:{bar_color};border-radius:4px;height:7px;'></div>
                         </div>
                         <div style='font-size:11px;color:#64748b;margin-top:3px;'>{d.justification}</div>
@@ -453,7 +448,7 @@ if st.session_state.results:
 
             # Stats
             st.markdown(f"""
-            <div style='background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;font-size:12px;'>
+            <div style='background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:14px;font-size:12px;'>
             <b>Total Score:</b> <span style='color:#0D9488;font-size:18px;font-weight:700;'>{sc.total_weighted_score:.2f}</span> / 10<br/>
             <b>Semantic Similarity:</b> {sc.semantic_similarity_score:.3f}<br/>
             <b>Skills:</b> {", ".join((profile.skills or [])[:6]) or "—"}<br/>

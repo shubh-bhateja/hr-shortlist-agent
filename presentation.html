@@ -53,7 +53,7 @@ AI Enablement Internship — Task 1 Submission<br>
 </p>
 <div style="margin-top:30px;">
 <span class="badge badge-teal">LangGraph</span>
-<span class="badge badge-teal">GPT-4o</span>
+<span class="badge badge-teal">Groq / Llama 3.3</span>
 <span class="badge badge-teal">SentenceTransformers</span>
 <span class="badge badge-teal">Streamlit</span>
 </div>
@@ -74,7 +74,7 @@ AI Enablement Internship — Task 1 Submission<br>
 <br>
 <p style="font-size:0.7em; color:#94a3b8;">
 <strong>Goal:</strong> Build an AI agent that standardises evaluation, surfaces best-fit candidates, 
-and keeps a <span class="teal">human in the loop</span> for final decisions.
+<span class="teal">human in the loop</span> for final decisions.
 </p>
 </section>
 
@@ -150,7 +150,7 @@ and keeps a <span class="teal">human in the loop</span> for final decisions.
 <h2>🛠️ Tech Stack & Decision Log</h2>
 <table>
 <tr><th>Layer</th><th>Choice</th><th>Why This Over Alternatives</th></tr>
-<tr><td><strong>LLM</strong></td><td class="teal">GPT-4o</td><td>Best JSON-mode reliability, 128K context, native structured output. Over Claude (no JSON mode), Gemini (higher latency).</td></tr>
+<tr><td><strong>LLM</strong></td><td class="teal">Groq / Llama 3.3</td><td>State-of-the-art open source model with instant inference (< 1s responses). Supports JSON mode.</td></tr>
 <tr><td><strong>Agent Framework</strong></td><td class="teal">LangGraph 0.4</td><td>Explicit graph with typed state. Over CrewAI (less control), AutoGen (heavyweight).</td></tr>
 <tr><td><strong>Embeddings</strong></td><td class="teal">SentenceTransformers</td><td>Runs locally (no API cost), zero PII leakage. all-MiniLM-L6-v2 — fast + effective.</td></tr>
 <tr><td><strong>Resume Parse</strong></td><td class="teal">PyMuPDF + python-docx</td><td>Fastest pure-Python PDF extractor. LLM extraction handles unstructured formats.</td></tr>
@@ -178,7 +178,7 @@ and keeps a <span class="teal">human in the loop</span> for final decisions.
 <div class="card">
 <h3 style="color:#8B5CF6;">Mode 2: LLM Rubric Reasoning</h3>
 <ul style="font-size:0.8em;">
-<li>GPT-4o scores 5 dimensions (0-10)</li>
+<li>Llama 3.3 scores 5 dimensions (0-10)</li>
 <li>JSON mode + Pydantic validation</li>
 <li>Receives similarity as calibration anchor</li>
 <li>One-sentence justification per dimension</li>
@@ -206,7 +206,7 @@ and keeps a <span class="teal">human in the loop</span> for final decisions.
 <tr><td><span class="red">PII Leakage</span></td><td>Mask before LLM</td><td>Regex extracts email/phone → masked to [EMAIL]/[PHONE] → re-injected locally post-response</td></tr>
 <tr><td><span class="red">API Key Exposure</span></td><td>Never in code</td><td>.env + python-dotenv, .gitignore, password-type UI input, .env.example template</td></tr>
 <tr><td><span class="amber">Hallucination</span></td><td>Multi-layer guard</td><td>JSON mode + Pydantic ge=0/le=10 + dual-mode calibration + threshold anchoring</td></tr>
-<tr><td><span class="amber">Unauthorised Access</span></td><td>API key gate</td><td>App requires valid OpenAI key; prod: OAuth proxy recommendation</td></tr>
+<tr><td><span class="amber">Unauthorised Access</span></td><td>API key gate</td><td>App requires valid Groq key; prod: OAuth proxy recommendation</td></tr>
 <tr><td><span class="amber">Data at Rest</span></td><td>Ephemeral storage</td><td>tempfile.mkdtemp() for uploads; output/ gitignored; no database persistence</td></tr>
 </table>
 </section>

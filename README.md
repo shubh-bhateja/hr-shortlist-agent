@@ -60,7 +60,7 @@ LangGraph models the pipeline as an explicit directed acyclic graph with typed s
 
 | Layer | Choice | Rationale |
 |---|---|---|
-| **LLM** | `gpt-4o-2024-08-06` | Best JSON-mode reliability, 128K context window (handles long resumes), native structured output support. Selected over Claude 3.5 Sonnet (no direct JSON mode) and Gemini 1.5 Pro (higher latency for structured tasks). gpt-4o-mini available as cost-saving option. |
+| **LLM** | `llama-3.3-70b-versatile` (Groq) | High speed, open-source models with native JSON output support via Groq. |
 | **Agent Framework** | LangGraph 0.4.x | Explicit graph architecture with typed state, better than LangChain AgentExecutor for multi-node pipelines. Supports LangSmith tracing natively. Selected over CrewAI (less control over node execution) and AutoGen (heavyweight for a pipeline flow). |
 | **Embeddings** | SentenceTransformers `all-MiniLM-L6-v2` | Runs locally (no API cost), fast inference, strong semantic performance for resume-JD matching. Avoids sending candidate profiles to an external embedding API — privacy benefit. |
 | **Resume Parse** | PyMuPDF + python-docx | PyMuPDF is the fastest pure-Python PDF text extractor. python-docx handles DOCX natively. LLM extraction on top handles unstructured resume formats. |
@@ -93,7 +93,7 @@ LangGraph models the pipeline as an explicit directed acyclic graph with typed s
 - For production: recommend on-premise LLM (Ollama + LLaMA 3) to keep all data local.
 
 ### 3. API Key Exposure
-**Risk:** OpenAI API key leaked in source code or git history.
+**Risk:** Groq API key leaked in source code or git history.
 
 **Mitigation:**
 - API key is loaded via `python-dotenv` from a `.env` file.
@@ -116,7 +116,7 @@ LangGraph models the pipeline as an explicit directed acyclic graph with typed s
 **Risk:** Anyone who finds the Streamlit URL can run the agent.
 
 **Mitigation:**
-- The app requires a valid OpenAI API key to function — unauthenticated users can't trigger LLM calls.
+- The app requires a valid Groq API key to function — unauthenticated users can't trigger LLM calls.
 - For production: add Streamlit `secrets.toml` password auth or deploy behind an OAuth proxy (e.g. Cloudflare Access).
 - Rate limiting: Streamlit Cloud enforces per-IP rate limits on free tier.
 
@@ -157,11 +157,9 @@ pip install -r requirements.txt
 ### 4. Set up environment variables
 ```bash
 cp .env.example .env
-# The default uses Google Gemini (FREE — no payment required)
-# Get your free key at: https://aistudio.google.com/apikey
-# Set GOOGLE_API_KEY in .env
-#
-# Alternatively, set LLM_PROVIDER=openai and add OPENAI_API_KEY (paid)
+# The app uses Groq (FREE — no payment required)
+# Get your free key at: https://console.groq.com/keys
+# Set GROQ_API_KEY and LLM_PROVIDER=groq in .env
 # Optionally add LangSmith key for observability
 ```
 
@@ -182,7 +180,7 @@ streamlit run app.py
 Open `http://localhost:8501` in your browser.
 
 **Quick start:**
-1. Enter your OpenAI API key in the sidebar
+1. Enter your Groq API key in the sidebar
 2. Paste the contents of `sample_data/sample_jd.txt` into the JD field
 3. Upload the PDF files from `sample_data/`
 4. Click **Run Shortlisting Agent**

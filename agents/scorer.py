@@ -37,8 +37,8 @@ RUBRIC = [
     {"dimension": "Skills Match",        "weight": 0.30},
     {"dimension": "Experience Relevance","weight": 0.25},
     {"dimension": "Education & Certs",   "weight": 0.15},
-    {"dimension": "Project / Portfolio", "weight": 0.20},
-    {"dimension": "Communication Quality","weight": 0.10},
+    {"dimension": "Project / Portfolio", "weight": 0.15},
+    {"dimension": "Communication Quality","weight": 0.15},
 ]
 
 # ── Semantic similarity ────────────────────────────────────────────────────────
@@ -95,19 +95,19 @@ Scoring scale: 0 = Poor, 5 = Average, 10 = Excellent (as per brief).
 Be strict. Reserve 9–10 for exceptional evidence, not assumptions.
 
 Return a JSON object with this exact structure:
-{
+{{
   "dimensions": [
-    {
+    {{
       "dimension": "<name>",
       "raw_score": <0-10 float>,
       "justification": "<one sentence, specific>"
-    },
+    }},
     ...
   ],
   "skill_gaps": ["<skill1>", "<skill2>"],
   "summary": "<2-3 sentence overall assessment>",
   "recommendation": "<STRONG HIRE | HIRE | CONSIDER | NO HIRE>"
-}
+}}
 
 recommendation thresholds (use weighted total as guidance):
   8.0–10.0 → STRONG HIRE
@@ -141,6 +141,9 @@ Education: {education}
 Certifications: {certs}
 Domains Worked In: {domains}
 Projects / Portfolio: {projects}
+
+COMMUNICATION SNIPPET (First 400 chars of resume):
+{comm_snippet}
 
 SEMANTIC SIMILARITY SCORE (embedding cosine similarity, 0–1): {similarity}
 (Use this as a quantitative signal to calibrate Skills Match and Experience Relevance, 
@@ -191,6 +194,7 @@ def score_candidate(
         "certs": ", ".join(profile.certifications) or "None",
         "domains": ", ".join(profile.domains_worked_in) or "Not specified",
         "projects": "; ".join(profile.projects) or "None listed",
+        "comm_snippet": profile.raw_text_snippet or "No raw text available.",
         "similarity": f"{semantic_sim:.3f}",
     })
 

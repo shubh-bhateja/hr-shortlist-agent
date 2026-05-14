@@ -317,7 +317,7 @@ def generate_pdf_report(
         "<b>Scoring Mode:</b> Dual — Semantic similarity (SentenceTransformers all-MiniLM-L6-v2 cosine) "
         "combined with LLM rubric reasoning in JSON mode.<br/>"
         "<b>Rubric Weights:</b> Skills Match 30% · Experience Relevance 25% · "
-        "Project / Portfolio 20% · Education & Certs 15% · Communication Quality 10%<br/>"
+        "Project / Portfolio 15% · Education & Certs 15% · Communication Quality 15%<br/>"
         "<b>Hallucination Mitigation:</b> Pydantic-validated structured output at every agent node; "
         "LLM operates in JSON mode; dimension scores are cross-checked against embedding similarity.<br/>"
         "<b>PII Handling:</b> Email and phone are extracted via regex locally and masked before "
