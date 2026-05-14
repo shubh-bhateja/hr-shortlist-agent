@@ -1,6 +1,6 @@
-# 🚀 **[DOWNLOAD PROJECT ASSETS (DRIVE LINK)](https://drive.google.com/drive/folders/1zjXq9aUSaWTOGQ8Xvd4pHV6bpyeVpHbK?usp=share_link)**
+# **DRIVE LINK : https://drive.google.com/drive/folders/1zjXq9aUSaWTOGQ8Xvd4pHV6bpyeVpHbK?usp=share_link**
 
-# 🎯 HR Resume & LinkedIn Shortlisting Agent
+#  HR Resume & LinkedIn Shortlisting Agent
 
 > **AI Enablement Internship – Task 1 Submission**  
 > Built with LangGraph · GPT-4o · SentenceTransformers · Streamlit
@@ -286,12 +286,6 @@ hr-shortlist-agent/
 └── README.md
 ```
 
----
 
-## License
-
-MIT License — free to use, modify, and distribute.
-
----
 
 *Built for the AI Enablement Internship — showcasing production-grade agentic AI architecture with LangGraph, dual-mode semantic scoring, privacy-first design, and full observability.*
