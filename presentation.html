@@ -37,15 +37,23 @@
 .metric .num { font-size: 2em; font-weight: 700; color: #0D9488; }
 .metric .lbl { font-size: 0.6em; color: #94a3b8; }
 @media print {
-    .reveal, .reveal .slides, .reveal .slides section {
+    /* Force deep solid dark background */
+    body, .reveal, .reveal .slides, .reveal .slides section, .reveal .backgrounds {
       background: #0A1628 !important;
-      color: #e2e8f0 !important;
+      color: #FFFFFF !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
     }
-    .reveal h1, .reveal h2, .reveal h3 { color: #0D9488 !important; }
-    .card { background: rgba(255,255,255,0.05) !important; border: 1px solid #334155 !important; }
-  }
+    /* Bold teal for headings */
+    .reveal h1, .reveal h2, .reveal h3, .teal { 
+      color: #2DD4BF !important; 
+    }
+    /* Cards with solid dark grey backgrounds */
+    .card { 
+      background: #111E2F !important; 
+      border: 1px solid #1D4ED8 !important; 
+    }
+}
 </style>
 </head>
 <body>
