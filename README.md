@@ -1,3 +1,5 @@
+# 🚀 **[DOWNLOAD PROJECT ASSETS (DRIVE LINK)](https://drive.google.com/drive/folders/1zjXq9aUSaWTOGQ8Xvd4pHV6bpyeVpHbK?usp=share_link)**
+
 # 🎯 HR Resume & LinkedIn Shortlisting Agent
 
 > **AI Enablement Internship – Task 1 Submission**  
