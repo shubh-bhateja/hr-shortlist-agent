@@ -1,5 +1,6 @@
-# **DRIVE LINK : https://drive.google.com/drive/folders/1zjXq9aUSaWTOGQ8Xvd4pHV6bpyeVpHbK?usp=share_link**
-# *PPT : presentation.html*
+# *DRIVE LINK (video & presentation)
+: https://drive.google.com/drive/folders/1zjXq9aUSaWTOGQ8Xvd4pHV6bpyeVpHbK?usp=share_link*
+
 
 #  HR Resume & LinkedIn Shortlisting Agent
 
