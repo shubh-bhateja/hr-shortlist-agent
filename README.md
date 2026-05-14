@@ -5,7 +5,6 @@
 #  HR Resume & LinkedIn Shortlisting Agent
 
 > **AI Enablement Internship – Task 1 Submission**  
-> Built with LangGraph · GPT-4o · SentenceTransformers · Streamlit
 
 ---
 
