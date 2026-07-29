@@ -1,7 +1,5 @@
 #  HR Resume & LinkedIn Shortlisting Agent
 
-> **AI Enablement Internship – Task 1 Submission**  
-
 ---
 
 ## Table of Contents
@@ -285,4 +283,4 @@ hr-shortlist-agent/
 
 
 
-*Built for the AI Enablement Internship — showcasing production-grade agentic AI architecture with LangGraph, dual-mode semantic scoring, privacy-first design, and full observability.*
+*showcasing production-grade agentic AI architecture with LangGraph, dual-mode semantic scoring, privacy-first design, and full observability*
